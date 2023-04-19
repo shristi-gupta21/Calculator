@@ -1,0 +1,99 @@
+body {
+  margin: 0;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.cntnr {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #c2c2d6;
+}
+
+.calculator {
+  min-height: 400px;
+  width: 380px;
+  background-color: black;
+  padding: 5px;
+}
+
+.show-value {
+  height: 4.1rem;
+  width: 100%;
+  font-family: "digital-clock-font";
+  color: white;
+  text-align: right;
+}
+
+.show-output {
+  line-height: 35px;
+  font-size: 29px;
+}
+.input-state {
+  min-height: 20px;
+  color: orange;
+}
+.keys {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 2px;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+  height: 335px;
+}
+
+.keys button {
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  border: none;
+  font-family: "Share Tech Mono", monospace;
+  cursor: pointer;
+}
+.AC,
+.zero {
+  grid-column: 1/3;
+}
+
+.equals {
+  grid-row: span 2;
+  background-color: #004466;
+}
+
+#multiply,
+#divide,
+#add,
+#subtract {
+  background-color: #666666;
+}
+
+.AC {
+  background-color: #ac3939;
+}
+
+#one,
+#two,
+#three,
+#four,
+#five,
+#six,
+#seven,
+#eight,
+#nine,
+#zero,
+#decimal {
+  background-color: #4d4d4d;
+}
+
+button:hover {
+  transform: scale(1.03);
+  color: black;
+  border: 0.1px solid white;
+  transition: 0.1s;
+}
