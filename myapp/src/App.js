@@ -2,18 +2,55 @@ import { useState } from "react";
 function App() {
   const [value, setValue] = useState("");
   const [displayValue, setDisplayValue] = useState("");
+  const [onClickEqual, setOnClickEqual] = useState(false);
+  const [ans, setAns] = useState("");
+
   const onClickBtns = (e) => {
-    console.log(e.target.value);
+    if (e.target.value === "=") {
+      let str = displayValue + value;
+      str.replace("=", "");
+      let ans = eval(str);
+      console.log(str);
+      console.log(ans);
+      setAns(ans);
+      setOnClickEqual(true);
+    } else {
+      setValue(e.target.value);
+      setOnClickEqual(false);
+      onShowValues();
+    }
+    if (e.target.value === "AC") {
+      setValue("");
+      setDisplayValue("");
+    }
+    if (onClickEqual) {
+      setDisplayValue("");
+    }
   };
+
+  const onShowValues = () => {
+    setDisplayValue(displayValue + value);
+  };
+
   return (
     <div className="cntnr">
       <div className="calculator">
-        <div className="show-value">
-          <div className="input-state"></div>
-          <div className="show-output">0</div>
+        <div className="show-value" id="display">
+          <div className="input-state">
+            {displayValue === "" ? displayValue : displayValue + value}{" "}
+          </div>
+          <div className="show-output">
+            {" "}
+            {value === "" ? 0 : onClickEqual ? ans : value}
+          </div>
         </div>
         <div className="keys">
-          <button className="AC" onClick={(e) => onClickBtns(e)} value={"AC"}>
+          <button
+            className="AC"
+            onClick={(e) => onClickBtns(e)}
+            value={"AC"}
+            id="clear"
+          >
             {/* <span>AC</span> */}
             AC
           </button>
