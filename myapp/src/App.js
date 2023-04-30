@@ -18,8 +18,11 @@ function App() {
     str = displayValue + value;
     if (/^0*$/.test(str)) {
       setOnClickZero(true);
+      // setTemp("");
     }
-
+    if (onClickZero) {
+      console.log("dnjkhncskjhn");
+    }
     if (value !== "0" && e.target.value !== 0) {
       setOnClickZero(false);
     }
@@ -30,7 +33,8 @@ function App() {
       e.target.value !== "/"
     ) {
       console.log("numbers");
-      setTemp(temp + e.target.value);
+      setTemp(temp.replace(/^0+/, "") + e.target.value);
+      console.log("hereee....", temp.replace(/^0+/, ""));
       setValue(e.target.value);
     } else {
       setValue(e.target.value);
@@ -110,7 +114,7 @@ function App() {
   };
 
   const onShowValues = () => {
-    setDisplayValue(displayValue + value);
+    setDisplayValue(displayValue.replace(/^0+/, "") + value);
   };
 
   return (
