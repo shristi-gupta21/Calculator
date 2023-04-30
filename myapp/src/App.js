@@ -1,31 +1,112 @@
-import { useState } from "react";
+import React from "react";
+// import { useState } from "react";
+// const ReactDOM = require('react-dom');
+// import { default as React } from "https://cdn.skypack.dev/react@15.4.2";
+// import { default as ReactDOM } from "https://cdn.skypack.dev/react-dom@15.4.2";
 function App() {
-  const [value, setValue] = useState("");
-  const [displayValue, setDisplayValue] = useState("");
-  const [onClickEqual, setOnClickEqual] = useState(false);
-  const [ans, setAns] = useState("");
+  const [value, setValue] = React.useState("");
+  const [displayValue, setDisplayValue] = React.useState("");
+  const [onClickEqual, setOnClickEqual] = React.useState(false);
+  const [ans, setAns] = React.useState("");
+  const [onClickDecimal, setOnClickDecimal] = React.useState(false);
+  const [onClickZero, setOnClickZero] = React.useState(false);
+  const [temp, setTemp] = React.useState("");
+  const [isOperatorsConse, setIsOperatorsConse] = React.useState(false);
 
   const onClickBtns = (e) => {
-    if (e.target.value === "=") {
-      let str = displayValue + value;
-      str.replace("=", "");
-      let ans = eval(str);
-      console.log(str);
-      console.log(ans);
-      setAns(ans);
-      setOnClickEqual(true);
+    let str = "";
+    str = displayValue + value;
+    if (/^0*$/.test(str)) {
+      setOnClickZero(true);
+    }
+
+    if (value !== "0" && e.target.value !== 0) {
+      setOnClickZero(false);
+    }
+    if (
+      e.target.value !== "+" &&
+      e.target.value !== "-" &&
+      e.target.value !== "*" &&
+      e.target.value !== "/"
+    ) {
+      console.log("numbers");
+      setTemp(temp + e.target.value);
+      setValue(e.target.value);
     } else {
       setValue(e.target.value);
-      setOnClickEqual(false);
+      setTemp("");
+    }
+    if (e.target.value === "=") {
+      if (isOperatorsConse) {
+        var filtered = str.match(/(\*|\+|\/|-)?(\.|\-)?\d+/g).join("");
+        var sum = eval(filtered);
+        console.log("filtered", filtered, "sum", sum);
+        setAns(sum);
+        setOnClickEqual(true);
+        setValue(str[str.length - 1] + "=" + sum);
+        setTemp("");
+      } else {
+        str.replace("=", "");
+        let ans = eval(str);
+        setAns(ans);
+        setOnClickEqual(true);
+        setValue(str[str.length - 1] + "=" + ans);
+        setTemp("");
+      }
+    } else {
       onShowValues();
+      setOnClickEqual(false);
+      setValue(e.target.value);
     }
-    if (e.target.value === "AC") {
-      setValue("");
-      setDisplayValue("");
-    }
+
     if (onClickEqual) {
       setDisplayValue("");
+      setOnClickDecimal(false);
     }
+
+    if (e.target.value === ".") {
+      setOnClickDecimal(true);
+    } else if (
+      e.target.value === "+" ||
+      e.target.value === "-" ||
+      e.target.value === "*" ||
+      e.target.value === "/"
+    ) {
+      if (
+        (str[str.length - 1] === "+" ||
+          str[str.length - 1] === "*" ||
+          str[str.length - 1] === "/" ||
+          str[str.length - 1] === "-") &&
+        (e.target.value === "+" ||
+          e.target.value === "*" ||
+          e.target.value === "/" ||
+          e.target.value === "-")
+      ) {
+        setIsOperatorsConse(true);
+      }
+      setOnClickDecimal(false);
+    }
+    if (
+      onClickEqual &&
+      (e.target.value === "+" ||
+        e.target.value === "*" ||
+        e.target.value === "/" ||
+        e.target.value === "-")
+    ) {
+      setTemp(ans + e.target.value);
+      setValue(ans + e.target.value);
+    }
+    if (onClickZero) {
+      console.log("tem================");
+    }
+  };
+
+  console.log("value =", value, "temp => " + temp, "ans ", ans);
+  const clear = () => {
+    setValue("");
+    setTemp("");
+    setDisplayValue("");
+    setOnClickDecimal(false);
   };
 
   const onShowValues = () => {
@@ -35,30 +116,29 @@ function App() {
   return (
     <div className="cntnr">
       <div className="calculator">
-        <div className="show-value" id="display">
+        <div className="show-value">
           <div className="input-state">
-            {displayValue === "" ? displayValue : displayValue + value}{" "}
+            {onClickZero
+              ? 0
+              : displayValue === ""
+              ? displayValue
+              : displayValue + value}
           </div>
-          <div className="show-output">
+          <div className="show-output" id="display">
             {" "}
-            {value === "" ? 0 : onClickEqual ? ans : value}
+            {value === "" ? 0 : onClickEqual ? ans : onClickZero ? value : temp}
           </div>
         </div>
         <div className="keys">
-          <button
-            className="AC"
-            onClick={(e) => onClickBtns(e)}
-            value={"AC"}
-            id="clear"
-          >
+          <button className="AC" onClick={clear} value={"AC"} id="clear">
             {/* <span>AC</span> */}
             AC
           </button>
           <button id="divide" onClick={(e) => onClickBtns(e)} value={"/"}>
             /
           </button>
-          <button id="multiply" onClick={(e) => onClickBtns(e)} value={"x"}>
-            x
+          <button id="multiply" onClick={(e) => onClickBtns(e)} value={"*"}>
+            *
           </button>
           <button id="seven" onClick={(e) => onClickBtns(e)} value={"7"}>
             7
@@ -106,11 +186,17 @@ function App() {
             className="zero"
             onClick={(e) => onClickBtns(e)}
             value={"0"}
+            disabled={onClickZero}
           >
             0
           </button>
 
-          <button id="decimal" onClick={(e) => onClickBtns(e)} value={"."}>
+          <button
+            id="decimal"
+            onClick={(e) => onClickBtns(e)}
+            value={"."}
+            disabled={onClickDecimal}
+          >
             .
           </button>
         </div>
@@ -118,5 +204,7 @@ function App() {
     </div>
   );
 }
+
+// ReactDOM.render(<App/>, document.getElementById('root'));
 
 export default App;
